@@ -5,7 +5,7 @@ import maze_generator
 # Constants
 SCREEN_WIDTH = 1500
 SCREEN_HEIGHT = 900
-SCREEN_TITLE = "Old Castle Maze"
+SCREEN_TITLE = "Old Castle Maze. Collect all 4 coins and press ENTER to move to the next level."
 
 PLAYER_CHAR_SCALING = 0.35
 PLAYER_MOVEMENT_SPEED = 8
