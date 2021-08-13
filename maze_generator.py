@@ -1,6 +1,7 @@
 from random import shuffle
 
 
+# Generates a random maze of given width and height
 def make_maze(width, height):
     # Keep track of visited cells
     visited = [[0] * width + [1] for _ in range(height)] + [[1] * (width + 1)]

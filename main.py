@@ -1,5 +1,6 @@
 import arcade
 import wall_list_builder
+import maze_generator
 
 # Constants
 SCREEN_WIDTH = 1500
@@ -14,16 +15,17 @@ RIGHT_VIEWPORT_MARGIN = SCREEN_WIDTH / 2
 BOTTOM_VIEWPORT_MARGIN = SCREEN_HEIGHT / 2
 TOP_VIEWPORT_MARGIN = SCREEN_HEIGHT / 2
 
-
-TILE_SCALING = 0.25
+TILE_SCALING = 0.35
 WALL_TILE_SIZE = 128 * TILE_SCALING
 MAZE_STARTING_WIDTH = 4
 MAZE_STARTING_HEIGHT = 4
 
+
 # TODO: Create a menu to control the game
 # TODO: Track the time for each level
-# TODO: Add animation to character movement
-# TODO: Think about the obstacles
+# TODO: Try creating a monster in a random maze cell and make it chase the player
+# TODO: How to fight the monster?
+
 
 class OldCastleGame(arcade.Window):
     def __init__(self):
@@ -80,13 +82,13 @@ class OldCastleGame(arcade.Window):
         self.player_list.append(self.player_char)
 
         # Create the walls
-        print(WALL_TILE_SIZE)
+        horizontal_walls, vertical_walls = maze_generator.make_maze(maze_cell_width, maze_cell_height)
         coordinate_list = wall_list_builder.create_wall_list(
-                        maze_cell_width,
-                        maze_cell_height,
-                        vertical_start,
-                        WALL_TILE_SIZE,
-                        WALL_TILE_SIZE
+                vertical_start,
+                WALL_TILE_SIZE,
+                WALL_TILE_SIZE,
+                horizontal_walls,
+                vertical_walls
         )
 
         for coordinate in coordinate_list:
@@ -96,10 +98,10 @@ class OldCastleGame(arcade.Window):
 
         # Create coins in 4 corners of the maze
         coin_coordinates = [
-            ((WALL_TILE_SIZE * 4.5), (maze_height - WALL_TILE_SIZE * 1.5)),                 # top left
-            ((maze_width - WALL_TILE_SIZE * 0.5), (maze_height - WALL_TILE_SIZE * 1.5)),    # top right
-            ((maze_width - WALL_TILE_SIZE * 0.5), (WALL_TILE_SIZE * 3.5)),                  # bottom right
-            ((WALL_TILE_SIZE * 4.5), (WALL_TILE_SIZE * 3.5))                                # bottom left
+                ((WALL_TILE_SIZE * 4.5), (maze_height - WALL_TILE_SIZE * 1.5)),                 # top left
+                ((maze_width - WALL_TILE_SIZE * 0.5), (maze_height - WALL_TILE_SIZE * 1.5)),    # top right
+                ((maze_width - WALL_TILE_SIZE * 0.5), (WALL_TILE_SIZE * 3.5)),                  # bottom right
+                ((WALL_TILE_SIZE * 4.5), (WALL_TILE_SIZE * 3.5))                                # bottom left
         ]
 
         for coordinate in coin_coordinates:
@@ -135,7 +137,6 @@ class OldCastleGame(arcade.Window):
                 self.maze_size += 1
                 self.setup()
 
-
     def on_key_release(self, key, modifiers):
         """ Called when the user releases a key. """
         if key == arcade.key.UP or key == arcade.key.W:
@@ -164,9 +165,7 @@ class OldCastleGame(arcade.Window):
             # Update coin counter
             self.coin_counter += 1
 
-            if self.coin_counter > 3:
-                # TODO change to a menu.
-                print("VICTORY")
+            # TODO change to a menu.
 
         # --- Manage Scrolling ---
 
